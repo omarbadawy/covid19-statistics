@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react'
 
-import axios from 'axios';
-import Logo from './images/logo.png';
-import { Grid } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/';
+import axios from 'axios'
+import Logo from './images/logo.png'
+import { Grid } from '@material-ui/core'
+import { makeStyles } from '@material-ui/core/'
 
-import Cards from './components/Cards';
-import SelectInput from './components/SelectInput';
-import Chart from './components/Chart';
+import Cards from './components/Cards'
+import SelectInput from './components/SelectInput'
+import Chart from './components/Chart'
 
 const useStyles = makeStyles((theme) => ({
     centerLogo: {
@@ -20,16 +20,16 @@ const useStyles = makeStyles((theme) => ({
             width: '370px',
         },
     },
-}));
+}))
 
 const App = () => {
-    const [country, setCountry] = useState('Global');
-    const [allStatus, setAllStatus] = useState({});
-    const [loading, setLoading] = useState(false);
-    const classes = useStyles();
+    const [country, setCountry] = useState('Global')
+    const [allStatus, setAllStatus] = useState({})
+    const [loading, setLoading] = useState(false)
+    const classes = useStyles()
 
     useEffect(() => {
-        setLoading(true);
+        setLoading(true)
         if (country === 'Global') {
             axios
                 .get('https://coronavirus-19-api.herokuapp.com/all')
@@ -38,13 +38,14 @@ const App = () => {
                         cases: response.data.cases,
                         recovered: response.data.recovered,
                         deaths: response.data.deaths,
-                    };
-                    setAllStatus(object);
-                    setLoading(false);
+                    }
+                    setAllStatus(object)
+                    setLoading(false)
                 })
                 .catch((err) => {
-                    console.log(err.message);
-                });
+                    console.log(err.message)
+                    setAllStatus({ cases: 0, deaths: 0, recovered: 0 })
+                })
         } else {
             axios
                 .get(`https://api.covid19api.com/total/dayone/country/${country}`)
@@ -53,29 +54,30 @@ const App = () => {
                         cases: response.data[response.data.length - 1].Confirmed,
                         recovered: response.data[response.data.length - 1].Recovered,
                         deaths: response.data[response.data.length - 1].Deaths,
-                    };
-                    setAllStatus(object);
-                    setLoading(false);
+                    }
+                    setAllStatus(object)
+                    setLoading(false)
                 })
                 .catch((err) => {
-                    console.log(err.message);
-                });
+                    console.log(err.message)
+                    setAllStatus({ cases: 0, deaths: 0, recovered: 0 })
+                })
         }
-    }, [country]);
+    }, [country])
 
     const setCountryHandler = (country) => {
-        setCountry(country);
-    };
+        setCountry(country)
+    }
     const isEmpty = (obj) => {
         for (var key in obj) {
-            if (obj.hasOwnProperty(key)) return false;
+            if (obj.hasOwnProperty(key)) return false
         }
-        return true;
-    };
+        return true
+    }
 
-    let cards = <Cards allCases={{ cases: 0, deaths: 0, recovered: 0 }} />;
+    let cards = <Cards allCases={{ cases: 0, deaths: 0, recovered: 0 }} />
     if (!isEmpty(allStatus) && !loading) {
-        cards = <Cards allCases={allStatus} />;
+        cards = <Cards allCases={allStatus} />
     }
 
     return (
@@ -101,7 +103,7 @@ const App = () => {
                 <Grid item xs={false} sm={1} md={2} />
             </Grid>
         </Grid>
-    );
-};
+    )
+}
 
-export default App;
+export default App
